@@ -270,28 +270,29 @@ Store them (encryped to the machine, in the user's registry)
 15
 ```
 
+## Calling cmdlets from something other than powershell:
 
+Since the cmdlets are hosted via REST, they can be called using anything! A browser, command line tools like `curl` and `wget` or languages like node.js.
+
+``` bash
+# example using curl:
+
+# will return the results in JSON format:
+$ curl -u garrett:password --basic http://localhost/add-numbers?numbers=1,2,3
+[6]
+
+# if you don't like JSON, you can change the response format (hmm. something not working right... sigh):
+
+$ curl -u garrett:password --basic http://localhost/add-numbers?numbers=1,2,3&format=xml
+<ArrayOfanyType xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+
+```
 
 # REFERENCE
 
 ## Cmdlets for using Rest Services
 
 ### add-restcmdlet
-
-NAME
-	Add-RestCmdlet
-
-SYNTAX
-    Add-RestCmdlet -Command <string> [-PublishAs <string>] [-RoleRequired <string[]>] [-DefaultParameter <string[]>] [-ForcedParameter <string[]>]
-    [<CommonParameters>]
-
-
-ALIASES
-    None
-
-
-REMARKS
-    None
 ### remove-restcmdlet
 
 ### start-restservice

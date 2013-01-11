@@ -4,7 +4,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using ClrPlus.Powershell.Rest.Commands;
-
+ 
 namespace RestableCmdletSample {
     [Cmdlet(VerbsCommon.Add, "Numbers")]
     public class AddNumbersCmdlet : RestableCmdlet<AddNumbersCmdlet> {
