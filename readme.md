@@ -141,9 +141,11 @@ rest-command[setservicepassword] {
 	cmdlet: "set-servicepassword";
 }
 
-/* 
-Other examples:
-==============
+```
+
+Some other examples:
+
+``` css
 
 rest-command {
 	// you can specify many roles
@@ -169,12 +171,27 @@ rest-command {
 }
 
 
-*/
 
 ```
 
 
 ### The users.properties file
+
+We have a simple authentication system in place that pulls from a properties file.
+
+``` css
+// declare each user 
+user[garrett] { 
+
+	// give a password
+    password : "password";
+
+	// and whatever roles you want. 
+    roles : {
+        admins,users,editors
+    };
+}
+```
 
 
 ## Working with example cmdlets
