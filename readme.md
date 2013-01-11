@@ -60,6 +60,11 @@ You have to pass the class name as the parameter to the generic -- this lets the
 
 ## Setting up the service 
 
+**NOTE** : The listener runs inside the current powershell process. 
+If you need to run it outside the current process, spawn another powershell! 
+
+You could also setup a scheduled task if you wanted to do this without having anyone logged in.
+
 ### via the command line:
 
 You can add a cmdlet to the service and start listening easily:
@@ -72,7 +77,7 @@ import-module .\RestableCmdletSample.dll
 # add the cmdlet 
 Add-RestCmdlet -Command get-helloworld
 
-# start the listener (listens from this process, if you exit, it will close the listener!)
+# start the listener 
 start-restservice 
 
 ```
@@ -87,12 +92,86 @@ import-module .\RestableCmdletSample.dll
 # load the configuration from the file given:
 start-restservice -config .\service.properties
 
-# (listens from this process, if you exit, it will close the listener!)
 ```
 
-
-
 ### The service.properties file
+
+``` css
+// REST Service Properties File
+
+rest-service  {
+	// the file that contains the user accounts (if you are using authentication)
+	user-accounts : "users.properties";
+
+	// http addresses to listen to. seperate with commas.
+    listen-on: {
+		"http://*/" 
+	};
+};
+
+rest-command[gethelloworld] {
+	// by commenting this out, this command is exposed via rest without any security at all 
+	// roles : users;
+
+	cmdlet : "get-HelloWorld";
+
+	// optional: You can set default parameters for cmdlet values:
+	default-parameters : {
+        second = " this is a happy day"
+    };
+
+	// optional: You can set FORCE parameters for cmdlet values:
+	forced-parameters : {
+        third = " CAN'T CHANGE"
+    };
+}
+
+rest-command[addnumbers] {
+	// you can define any role required
+	// just make sure that you have a user that has that role!
+	roles : users;
+
+    cmdlet : "add-numbers" ;
+}
+
+// this cmdlet lets people reset their password. 
+// this one is built-into the ClrPlus assembly.
+rest-command[setservicepassword] {
+	roles: users;
+	cmdlet: "set-servicepassword";
+}
+
+/* 
+Other examples:
+==============
+
+rest-command {
+	// you can specify many roles
+	roles: {editors, admins};
+
+	cmdlet : "some-command";
+
+	// optional: You can set default parameters for cmdlet values that take arrays too
+	default-parameters : {
+		// if the user passes values for defaults, they get merged with the ones 
+		// the admin sets here.
+        someparam = { "garrett", "serack" }
+		someotherparam = { "serack", "garrett" }
+    };
+
+	// optional: You can set default parameters for cmdlet values that take arrays too
+	forced-parameters : {
+		// if the user passes values for forced parameters, they get dropped with the ones 
+		// and ONLY the ones the admin sets here are used.
+        someparam = { "garrett", "serack" }
+		someotherparam = { "serack", "garrett" }
+    };
+}
+
+
+*/
+
+```
 
 
 ### The users.properties file
