@@ -134,9 +134,11 @@ rest-command[addnumbers] {
     cmdlet : "add-numbers" ;
 }
 
-// this cmdlet lets people reset their password. 
-// this one is built-into the ClrPlus assembly.
+
 rest-command[setservicepassword] {
+	// this cmdlet lets people reset their password. 
+	// this one is built-into the ClrPlus assembly.
+
 	roles: users;
 	cmdlet: "set-servicepassword";
 }
@@ -218,13 +220,78 @@ Hello World. Response: [this]+[that]+[ CAN'T CHANGE]
 
 You'll see the third parameter is forced to a particular value--this was set in the service.properties file.
 
+
+#### Calling cmdlets that require authentication
+
+To use authentication, you have use the `-credential` parameter:
+
+``` powershell
+# you could have it popup and ask you when you run it:
+> add-numbers -serviceurl http://localhost -credential (get-credential) -numbers 1,2,3,4
+Supply values for the following parameters:
+Credential
+
+# (it pops up a GUI prompt)
+
+10
+
+```
+
+You could store the credential in a variable first:
+
+``` powershell
+> $c = get-credential 
+Supply values for the following parameters:
+Credential
+
+# (it pops up a GUI prompt)
+
+# now call the service:
+> add-numbers -serviceurl http://localhost -credential $c -numbers 1,2,3,4
+10
+
+```
+
+
 ### Making it easy: remember serviceurl and credentials 
+
+Of course, who wants to actually keep giving the `-serviceurl` and `-credential` parameters, right?
+
+Store them (encryped to the machine, in the user's registry)
+
+``` powershell
+> Set-DefaultRemoteService -ServiceUrl http://localhost -credential (get-credential) -remember
+# this  will prompt for the credential, and then store that and the serviceurl in the registry.
+# if you don't use -remember, it will store it only in the current powershell process.
+
+# call a remote cmdlet, this time just say -remote
+> add-numbers -remote -numbers 1,2,3,4,5
+
+15
+```
+
+
 
 # REFERENCE
 
 ## Cmdlets for using Rest Services
 
 ### add-restcmdlet
+
+NAME
+	Add-RestCmdlet
+
+SYNTAX
+    Add-RestCmdlet -Command <string> [-PublishAs <string>] [-RoleRequired <string[]>] [-DefaultParameter <string[]>] [-ForcedParameter <string[]>]
+    [<CommonParameters>]
+
+
+ALIASES
+    None
+
+
+REMARKS
+    None
 ### remove-restcmdlet
 
 ### start-restservice
