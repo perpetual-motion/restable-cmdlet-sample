@@ -12,7 +12,8 @@ From nuget just install the ClrPlus.Powershell package (referenced in this proje
 
 The only thing you have to do to create a restable cmdlet is to derive it from `RestableCmdlet<>` (correctly!) and add a few lines into the beginning of ProcessRecord:
 
-> HelloWorldCmdlet.cs 
+#### HelloWorldCmdlet.cs 
+
 ``` csharp
 
 namespace RestableCmdletSample
